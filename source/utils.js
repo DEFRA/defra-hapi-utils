@@ -1,4 +1,5 @@
 const uuid = require('uuid/v4')
+const { transform, isEqual, isObject } = require('lodash')
 
 const utils = {
   // Usage: const val = getNestedVal(myObj, 'a.b.c')
@@ -37,6 +38,14 @@ const utils = {
 
   async setCache (request, key, val) {
     request.yar.set(key, val)
+  },
+
+  difference (current, previous) {
+    return transform(current, (result, value, key) => {
+      if (!isEqual(value, previous[key])) {
+        result[key] = isObject(value) && isObject(previous[key]) ? utils.difference(value, previous[key]) : value
+      }
+    })
   }
 }
 

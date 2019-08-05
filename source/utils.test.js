@@ -48,6 +48,17 @@ lab.experiment(TestHelper.getFile(__filename), () => {
     })
   })
 
+  lab.experiment('difference', () => {
+    lab.test('between two objects', async () => {
+      const current = { a: 'original', b: 'changed', e: 'original', f: true }
+      const previous = { a: 'original', b: 'original', e: 'original', f: false }
+      const diff = utils.difference(current, previous)
+
+      // Now make sure the merge happened correctly with the e property deleted
+      Code.expect(JSON.stringify(diff)).to.equal('{"b":"changed","f":true}')
+    })
+  })
+
   lab.experiment('Cache:', () => {
     const cache = {}
     const request = {
