@@ -46,6 +46,16 @@ const utils = {
         result[key] = isObject(value) && isObject(previous[key]) ? utils.difference(value, previous[key]) : value
       }
     })
+  },
+
+  sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  },
+
+  async until (fn) {
+    while (!fn()) {
+      await utils.sleep(0)
+    }
   }
 }
 
