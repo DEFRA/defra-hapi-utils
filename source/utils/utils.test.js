@@ -2,7 +2,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const TestHelper = require('./test-helper')
+const TestHelper = require('../test-helper')
 const utils = require('./utils')
 
 lab.experiment(TestHelper.getFile(__filename), () => {
@@ -56,6 +56,17 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
       // Now make sure the merge happened correctly with the e property deleted
       Code.expect(JSON.stringify(diff)).to.equal('{"b":"changed","f":true}')
+    })
+  })
+
+  lab.experiment('until and sleep', () => {
+    lab.test('delay until function returns true', async () => {
+      let count = 0
+      await utils.until(() => {
+        count++
+        return count === 10
+      })
+      Code.expect(count).to.equal(10)
     })
   })
 

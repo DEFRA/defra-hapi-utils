@@ -24,7 +24,10 @@
   "devDependencies": {
     "@hapi/code": "^6.0.0",
     "@hapi/lab": "^19.1.0",
+    "@hapi/wreck": "^15.0.2",
     "codeclimate-test-reporter": "0.5.1",
+    "defra-logging-facade": "git+https://github.com/DEFRA/defra-logging-facade.git#master",
+    "lodash.merge": "^4.6.2",
     "sinon": "^7.3.2",
     "standard": "13.1.0"
   },
