@@ -28,7 +28,6 @@
     "@hapi/wreck": "^15.0.2",
     "codeclimate-test-reporter": "0.5.1",
     "defra-logging-facade": "git+https://github.com/DEFRA/defra-logging-facade.git#master",
-    "lodash.merge": "^4.6.2",
     "sinon": "^7.4.1",
     "standard": "14.0.2"
   },
