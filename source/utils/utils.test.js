@@ -86,7 +86,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         Code.expect(data).to.equal(cache.data)
       })
 
-      lab.test(`when key is a string and the data doesn't exist`, async () => {
+      lab.test('when key is a string and the data doesn\'t exist', async () => {
         delete cache.data
         const data = await utils.getCache(request, 'data')
         Code.expect(data).to.equal(undefined)
