@@ -9,7 +9,7 @@ module.exports = class Persistence {
   }
 
   async save (data) {
-    const { path, serviceApi, serviceApiEnabled = true } = this
+    const { path, serviceApiEnabled = true } = this
 
     if (!serviceApiEnabled) {
       logger.warn('Service API is Disabled')
@@ -18,7 +18,7 @@ module.exports = class Persistence {
 
     const { id } = data
     const method = id ? 'PATCH' : 'POST'
-    const uri = serviceApi + id ? `${path}/${id}` : path
+    const uri = id ? `${path}/${id}` : path
     const payloadData = cloneAndMerge(data, { id: null })
 
     const headers = { 'Content-Type': 'application/json' }
@@ -35,7 +35,7 @@ module.exports = class Persistence {
   }
 
   async restore (id) {
-    const { path, serviceApi, serviceApiEnabled = true } = this
+    const { path, serviceApiEnabled = true } = this
 
     if (!serviceApiEnabled) {
       logger.warn('Service API is Disabled')
@@ -43,7 +43,7 @@ module.exports = class Persistence {
     }
 
     const method = 'GET'
-    const uri = serviceApi + `${path}/${id}`
+    const uri = `${path}/${id}`
     const headers = { 'Content-Type': 'application/json' }
 
     try {
