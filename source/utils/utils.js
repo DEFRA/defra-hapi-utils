@@ -37,7 +37,11 @@ const utils = {
   },
 
   async setCache (request, key, val) {
-    request.yar.set(key, val)
+    return request.yar.set(key, val)
+  },
+
+  async clearCache (request) {
+    return request.yar.reset()
   },
 
   difference (current, previous) {

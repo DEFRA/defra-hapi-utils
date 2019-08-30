@@ -75,7 +75,10 @@ lab.experiment(TestHelper.getFile(__filename), () => {
     const request = {
       yar: {
         get: (key) => cache[key],
-        set: (key, val) => { cache[key] = val }
+        set: (key, val) => { cache[key] = val },
+        reset: () => {
+          Object.keys(cache).forEach((key) => delete cache[key])
+        }
       }
     }
 
@@ -109,6 +112,17 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         const data = { bar: 'foo' }
         await utils.setCache(request, 'addedData', data)
         Code.expect(cache.addedData).to.equal(data)
+      })
+    })
+
+    lab.experiment('clearCache', () => {
+      lab.test('clears the cache correctly', async () => {
+        cache.data = { foo: 'bar' }
+        let data = await utils.getCache(request, 'data')
+        Code.expect(data).to.equal(cache.data)
+        await utils.clearCache(request)
+        data = await utils.getCache(request, 'data')
+        Code.expect(data).to.equal(undefined)
       })
     })
   })
