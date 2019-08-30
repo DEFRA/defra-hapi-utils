@@ -25,25 +25,6 @@ const utils = {
     return uuid()
   },
 
-  async getCache (request, key) {
-    if (typeof key === 'string') {
-      return request.yar.get(key)
-    }
-    // Retrieve each item specified in the array of keys
-    // usage: const [a, b, c] = await utils.getCache(request, ['a', 'b', 'c'])
-    return Promise.all(key.map(async (key) => {
-      return utils.getCache(request, key)
-    }))
-  },
-
-  async setCache (request, key, val) {
-    return request.yar.set(key, val)
-  },
-
-  async clearCache (request) {
-    return request.yar.reset()
-  },
-
   difference (current, previous) {
     return transform(current, (result, value, key) => {
       if (!isEqual(value, previous[key])) {
