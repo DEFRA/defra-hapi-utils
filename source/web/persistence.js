@@ -43,7 +43,7 @@ module.exports = class Persistence {
     }
 
     const method = 'GET'
-    const uri = `${path}/${id}`
+    const uri = id ? `${path}/${id}` : path
     const headers = { 'Content-Type': 'application/json' }
 
     try {
