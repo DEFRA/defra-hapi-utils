@@ -1,7 +1,7 @@
 class Cache {
   static async get (request, key) {
     if (typeof key === 'string') {
-      return request.yar.get(key)
+      return JSON.parse(request.yar.get(key))
     }
     // Retrieve each item specified in the array of keys
     // usage: const [a, b, c] = await utils.getCache(request, ['a', 'b', 'c'])
@@ -11,7 +11,7 @@ class Cache {
   }
 
   static async set (request, key, val) {
-    return request.yar.set(key, val)
+    return request.yar.set(key, JSON.stringify(val))
   }
 
   static async clear (request) {
