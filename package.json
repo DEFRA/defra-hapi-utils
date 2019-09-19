@@ -26,12 +26,12 @@
     "@hapi/lab": "^20.2.2",
     "codeclimate-test-reporter": "0.5.1",
     "sinon": "^7.4.2",
-    "standard": "14.3.0"
+    "standard": "14.3.1"
   },
   "dependencies": {
     "@hapi/hoek": "^8.2.4",
     "@hapi/joi": "^15.1.1",
-    "@hapi/wreck": "^15.0.2",
+    "@hapi/wreck": "^15.1.0",
     "defra-logging-facade": "git+https://github.com/DEFRA/defra-logging-facade.git#master",
     "lodash": "^4.17.15"
   }
