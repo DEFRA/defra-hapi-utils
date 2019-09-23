@@ -8,6 +8,15 @@ const wreck = require('@hapi/wreck')
 const paymentsUrl = 'http://fake-payments.com'
 const returnUrl = 'http://fake-return.com'
 
+const config = {
+  paymentsUrl,
+  apiKey: 'api-key',
+  amount: 10,
+  reference: 'ref',
+  description: 'description',
+  returnUrl
+}
+
 lab.experiment(TestHelper.getFile(__filename), () => {
   let sandbox
   let requestArgs
@@ -16,17 +25,6 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
   lab.beforeEach(() => {
     requestMethod = async (...args) => { requestArgs = args }
-
-    expectedResult = {
-      state: {
-        status: 'created'
-      },
-      _links: {
-        next_url: {
-          href: returnUrl
-        }
-      }
-    }
 
     // Stub methods
     sandbox = sinon.createSandbox()
@@ -40,16 +38,17 @@ lab.experiment(TestHelper.getFile(__filename), () => {
   })
 
   lab.experiment('requestPayment', () => {
-    const config = {
-      paymentsUrl,
-      apiKey: 'api-key',
-      amount: 10,
-      reference: 'ref',
-      description: 'description',
-      returnUrl
-    }
-
     lab.beforeEach(() => {
+      expectedResult = {
+        state: {
+          status: 'created'
+        },
+        _links: {
+          next_url: {
+            href: returnUrl
+          }
+        }
+      }
       sandbox.stub(wreck, 'read').value(async () => expectedResult)
     })
 
@@ -82,6 +81,62 @@ lab.experiment(TestHelper.getFile(__filename), () => {
       let error
       try {
         await payment.requestPayment()
+      } catch (err) {
+        error = err
+      }
+      Code.expect(error).to.equal(testError)
+    })
+  })
+
+  lab.experiment('requestPayment', () => {
+    let paymentId
+
+    lab.beforeEach(() => {
+      paymentId = 'my-payment-id'
+
+      expectedResult = {
+        state: {
+          status: 'created'
+        },
+        _links: {
+          next_url: {
+            href: returnUrl
+          }
+        }
+      }
+
+      sandbox.stub(wreck, 'read').value(async () => expectedResult)
+    })
+
+    lab.test('when payment status is successful', async () => {
+      const payment = new Payment(config)
+      const result = await payment.requestStatus(paymentId)
+      Code.expect(result).to.equal(expectedResult)
+
+      // Now check request was called with the correct arguments
+      const [method, url] = requestArgs
+      Code.expect(method).to.equal('GET')
+      Code.expect(url).to.endWith(`${config.paymentsUrl}/${paymentId}`)
+    })
+
+    lab.test('when payment status is unsuccessful', async () => {
+      expectedResult = { code: 101, description: 'failure' }
+      const payment = new Payment(config)
+      const result = await payment.requestStatus(paymentId)
+      Code.expect(result.message).to.equal('101: failure')
+    })
+
+    lab.test('when request throws an error', async () => {
+      // Override stubbed request method
+      const testError = new Error('test error')
+      requestMethod = () => {
+        throw testError
+      }
+
+      const payment = new Payment(config)
+      let error
+      try {
+        await payment.requestStatus(paymentId)
       } catch (err) {
         error = err
       }

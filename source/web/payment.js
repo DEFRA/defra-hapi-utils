@@ -7,10 +7,10 @@ module.exports = class Payment {
     const schema = {
       paymentsUrl: joi.string().uri().required(),
       apiKey: joi.string().required(),
-      amount: joi.number().required(),
-      reference: joi.string().required(),
-      description: joi.string().required(),
-      returnUrl: joi.string().uri().required()
+      amount: joi.number(),
+      reference: joi.string(),
+      description: joi.string(),
+      returnUrl: joi.string().uri()
     }
 
     // Validate the config
@@ -26,10 +26,19 @@ module.exports = class Payment {
     Object.assign(this, value)
   }
 
-  requestOptions () {
+  get headers () {
+    return {
+      Authorization: `Bearer ${this.apiKey}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }
+
+  get payload () {
     // eslint-disable-next-line camelcase
-    const { apiKey, amount, reference, description, returnUrl: return_url } = this
-    const payload = {
+    const { amount, reference, description, returnUrl: return_url } = this
+
+    return {
       amount,
       reference,
       description,
@@ -37,22 +46,33 @@ module.exports = class Payment {
       return_url,
       delayed_capture: false
     }
-
-    const headers = {
-      Authorization: `Bearer ${apiKey}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
-    return { payload, headers }
   }
 
   // eslint-disable-next-line camelcase
   async requestPayment () {
-    const { paymentsUrl, amount, reference } = this
+    const { payload, headers, paymentsUrl } = this
+    const { amount, reference } = payload
     logger.info(`Requesting payment of £${amount} for reference ${reference}`)
 
     // Call the payment service
-    const res = await wreck.request('POST', paymentsUrl, this.requestOptions())
+    const res = await wreck.request('POST', paymentsUrl, { payload, headers })
+    const responseBody = await wreck.read(res, { json: true })
+
+    const { code, description } = responseBody
+    if (code) {
+      responseBody.message = `${code}: ${description}`
+      logger.error(responseBody.message)
+    }
+    return responseBody
+  }
+
+  // eslint-disable-next-line camelcase
+  async requestStatus (paymentId) {
+    const { paymentsUrl, headers } = this
+    logger.info(`Requesting status of payment of payment ID ${paymentId}`)
+
+    // Call the payment service
+    const res = await wreck.request('GET', `${paymentsUrl}/${paymentId}`, { headers })
     const responseBody = await wreck.read(res, { json: true })
 
     const { code, description } = responseBody
