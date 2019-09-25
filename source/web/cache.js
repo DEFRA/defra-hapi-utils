@@ -1,7 +1,12 @@
 class Cache {
   static async get (request, key) {
     if (typeof key === 'string') {
-      return request.yar.get(key)
+      const data = request.yar.get(key)
+      if (typeof data === 'object') {
+        // Make sure this is a clone and not a pointer to the actual data
+        return JSON.parse(JSON.stringify(data))
+      }
+      return data
     }
     // Retrieve each item specified in the array of keys
     // usage: const [a, b, c] = await utils.getCache(request, ['a', 'b', 'c'])
