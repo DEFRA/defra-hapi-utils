@@ -71,16 +71,23 @@ module.exports = class AddressLookUp {
           prop = prop.charAt(0).toLowerCase() + prop.slice(1)
         }
         switch (prop) {
-          case 'buildingNumber':
           case 'subBuildingName':
+            prop = 'businessName'
+            break
+          case 'buildingName':
             prop = 'addressLine1'
             break
+          case 'buildingNumber':
           case 'street':
             prop = 'addressLine2'
             break
         }
-        address[prop] = val
+        address[prop] = address[prop] ? `${address[prop]} ${val}` : val
       })
+      if (!address.addressLine1) {
+        address.addressLine1 = address.addressLine2
+        delete address.addressLine2
+      }
       return address
     })
   }

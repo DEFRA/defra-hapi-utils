@@ -61,8 +61,8 @@ lab.experiment(TestHelper.getFile(__filename), () => {
     lab.beforeEach(({ context }) => {
       context.expectedResults = [{
         addressLine: address.AddressLine,
-        addressLine1: address.SubBuildingName,
-        buildingName: address.BuildingName,
+        businessName: address.SubBuildingName,
+        addressLine1: address.BuildingName,
         addressLine2: address.Street,
         town: address.Town,
         county: address.County,
