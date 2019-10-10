@@ -4,8 +4,8 @@
 const { merge } = require('lodash')
 
 module.exports = (OriginalClass, ...mixins) => class MixedClass extends OriginalClass {
-  constructor () {
-    super()
+  constructor (...args) {
+    super(...args)
     merge(this, ...mixins)
   }
 }
