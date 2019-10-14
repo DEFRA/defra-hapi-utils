@@ -1,11 +1,26 @@
 const Wreck = require('@hapi/wreck')
-const { merge } = require('lodash')
+const joi = require('@hapi/joi')
 const { logger } = require('defra-logging-facade')
 const { getNestedVal, cloneAndMerge } = require('../utils/utils')
 
 module.exports = class Persistence {
-  constructor (options = {}) {
-    merge(this, options)
+  constructor (config = {}) {
+    const schema = {
+      path: joi.string().uri().required(),
+      serviceApiEnabled: joi.bool().default(true)
+    }
+
+    // Validate the config
+    const { value, error } = joi.validate(config, schema, {
+      abortEarly: false
+    })
+
+    // Throw if config is invalid
+    if (error) {
+      throw new Error(`The persistence config is invalid. ${error.message}`)
+    }
+
+    Object.assign(this, value)
   }
 
   async save (data) {

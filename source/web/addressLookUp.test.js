@@ -99,6 +99,18 @@ lab.experiment(TestHelper.getFile(__filename), () => {
       Code.expect(result.length).to.equal(0)
     })
 
+    lab.test('when config is invalid', async () => {
+      let error
+      let addressLookUp
+      try {
+        addressLookUp = new AddressLookUp({})
+      } catch (err) {
+        error = err
+      }
+      Code.expect(addressLookUp).to.equal(undefined)
+      Code.expect(error).to.equal(new Error('The address look up config is invalid. child "uri" fails because ["uri" is required]. child "username" fails because ["username" is required]. child "password" fails because ["password" is required]. child "key" fails because ["key" is required]'))
+    })
+
     lab.test('when request throws an error', async () => {
       // Override stubbed request method
       const testError = new Error('test error')

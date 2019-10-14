@@ -6,7 +6,7 @@ const TestHelper = require('../test-helper')
 const Persistence = require('./persistence')
 const wreck = require('@hapi/wreck')
 
-const path = '/path'
+const path = 'https://test.persistence.com/path'
 
 lab.experiment(TestHelper.getFile(__filename), () => {
   let sandbox
@@ -111,6 +111,18 @@ lab.experiment(TestHelper.getFile(__filename), () => {
       const persistence = new Persistence({ path, serviceApiEnabled: false })
       const result = await persistence.restore(id)
       Code.expect(result).to.equal({ id })
+    })
+
+    lab.test('when config is invalid', async () => {
+      let error
+      let persistence
+      try {
+        persistence = new Persistence({})
+      } catch (err) {
+        error = err
+      }
+      Code.expect(persistence).to.equal(undefined)
+      Code.expect(error).to.equal(new Error('The persistence config is invalid. child "path" fails because ["path" is required]'))
     })
 
     lab.test('when request throws an error', async () => {

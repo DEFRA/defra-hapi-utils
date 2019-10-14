@@ -126,6 +126,18 @@ lab.experiment(TestHelper.getFile(__filename), () => {
       Code.expect(result.message).to.equal('101: failure')
     })
 
+    lab.test('when config is invalid', async () => {
+      let error
+      let payment
+      try {
+        payment = new Payment({})
+      } catch (err) {
+        error = err
+      }
+      Code.expect(payment).to.equal(undefined)
+      Code.expect(error).to.equal(new Error('The payment config is invalid. child "paymentsUrl" fails because ["paymentsUrl" is required]. child "apiKey" fails because ["apiKey" is required]'))
+    })
+
     lab.test('when request throws an error', async () => {
       // Override stubbed request method
       const testError = new Error('test error')
