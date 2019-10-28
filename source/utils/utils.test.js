@@ -31,6 +31,20 @@ lab.experiment(TestHelper.getFile(__filename), () => {
     })
   })
 
+  lab.experiment('setNestedVal', () => {
+    lab.test('sets the final nested item when the path to the property does not originally exist', async () => {
+      const obj = {}
+      utils.setNestedVal(obj, 'path.does.not.exist', 10)
+      Code.expect(obj.path.does.not.exist).to.equal(10)
+    })
+
+    lab.test('sets the final nested item when the path to the property does originally exist', async () => {
+      const obj = { path: { does: { exist: 5 } } }
+      utils.setNestedVal(obj, 'path.does.not.exist', 5)
+      Code.expect(obj.path.does.not.exist).to.equal(5)
+    })
+  })
+
   lab.experiment('cloneAndMerge', () => {
     lab.test('properties are deleted when it is overridden with null', async () => {
       const obj1 = { a: 'details', b: { c: { d: 'deep details' } }, e: 'more details' }

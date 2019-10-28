@@ -11,6 +11,26 @@ const utils = {
       }, nestedObj)
   },
 
+  // Usage: setNestedVal(myObj, 'a.b.c', val)
+  setNestedVal (nestedObj, path, val) {
+    path.split('.').forEach((key, index, items) => {
+      if (index < items.length - 1) {
+        switch (typeof nestedObj[key]) {
+          case 'object':
+            break
+          case 'undefined':
+            nestedObj[key] = {}
+            break
+          default:
+            throw new Error(`Unexpected nested object type ${typeof nestedObj[key]}`)
+        }
+        nestedObj = nestedObj[key]
+      } else {
+        nestedObj = nestedObj[key] = val
+      }
+    })
+  },
+
   cloneAndMerge (...args) {
     const obj = Object.assign({}, ...args)
     Object.entries(obj).forEach(([prop, val]) => {
