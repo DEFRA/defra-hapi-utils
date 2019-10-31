@@ -4,16 +4,16 @@ const joi = require('@hapi/joi')
 
 module.exports = class AddressLookUp {
   constructor (config) {
-    const schema = {
+    const schema = joi.object({
       uri: joi.string().uri().required(),
       username: joi.string().required(),
       password: joi.string().required(),
       key: joi.string().required(),
       maxresults: joi.number().default(100)
-    }
+    })
 
     // Validate the config
-    const { value, error } = joi.validate(config, schema, {
+    const { value, error } = schema.validate(config, {
       abortEarly: false
     })
 

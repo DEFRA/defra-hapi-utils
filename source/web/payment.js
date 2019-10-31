@@ -4,17 +4,17 @@ const joi = require('@hapi/joi')
 
 module.exports = class Payment {
   constructor (config) {
-    const schema = {
+    const schema = joi.object({
       paymentsUrl: joi.string().uri().required(),
       apiKey: joi.string().required(),
       amount: joi.number(),
       reference: joi.string(),
       description: joi.string(),
       returnUrl: joi.string().uri()
-    }
+    })
 
     // Validate the config
-    const { value, error } = joi.validate(config, schema, {
+    const { value, error } = schema.validate(config, {
       abortEarly: false
     })
 

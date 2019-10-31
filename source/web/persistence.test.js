@@ -122,7 +122,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         error = err
       }
       Code.expect(persistence).to.equal(undefined)
-      Code.expect(error).to.equal(new Error('The persistence config is invalid. child "path" fails because ["path" is required]'))
+      Code.expect(error).to.equal(new Error('The persistence config is invalid. "path" is required'))
     })
 
     lab.test('when request throws an error', async () => {

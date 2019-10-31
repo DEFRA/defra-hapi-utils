@@ -108,7 +108,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         error = err
       }
       Code.expect(addressLookUp).to.equal(undefined)
-      Code.expect(error).to.equal(new Error('The address look up config is invalid. child "uri" fails because ["uri" is required]. child "username" fails because ["username" is required]. child "password" fails because ["password" is required]. child "key" fails because ["key" is required]'))
+      Code.expect(error).to.equal(new Error('The address look up config is invalid. "uri" is required. "username" is required. "password" is required. "key" is required'))
     })
 
     lab.test('when request throws an error', async () => {
