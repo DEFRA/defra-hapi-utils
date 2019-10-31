@@ -5,13 +5,13 @@ const { getNestedVal, cloneAndMerge } = require('../utils/utils')
 
 module.exports = class Persistence {
   constructor (config = {}) {
-    const schema = {
+    const schema = joi.object({
       path: joi.string().uri().required(),
       serviceApiEnabled: joi.bool().default(true)
-    }
+    })
 
     // Validate the config
-    const { value, error } = joi.validate(config, schema, {
+    const { value, error } = schema.validate(config, {
       abortEarly: false
     })
 

@@ -135,7 +135,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         error = err
       }
       Code.expect(payment).to.equal(undefined)
-      Code.expect(error).to.equal(new Error('The payment config is invalid. child "paymentsUrl" fails because ["paymentsUrl" is required]. child "apiKey" fails because ["apiKey" is required]'))
+      Code.expect(error).to.equal(new Error('The payment config is invalid. "paymentsUrl" is required. "apiKey" is required'))
     })
 
     lab.test('when request throws an error', async () => {
