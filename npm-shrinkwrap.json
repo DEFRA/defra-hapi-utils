@@ -683,7 +683,7 @@
     },
     "defra-logging-facade": {
       "version": "git+https://github.com/DEFRA/defra-logging-facade.git#bb51e5bcbc70a7bc8ffbbc6d14820a2b5ca71f94",
-      "from": "git+https://github.com/DEFRA/defra-logging-facade.git#master",
+      "from": "git+https://github.com/DEFRA/defra-logging-facade.git#bb51e5bcbc70a7bc8ffbbc6d14820a2b5ca71f94",
       "requires": {
         "airbrake-js": "~1.4.9",
         "lodash.clonedeep": "~4.5.0",
