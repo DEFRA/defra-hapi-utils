@@ -1,9 +1,9 @@
 # Ivory Shared code
 
-[![Build Status](https://travis-ci.com/DEFRA/ivory-shared.svg?branch=master)](https://travis-ci.com/DEFRA/ivory-shared)
-[![Known Vulnerabilities](https://snyk.io/test/github/defra/ivory-shared/badge.svg)](https://snyk.io/test/github/defra/ivory-shared)
-[![Code Climate](https://codeclimate.com/github/DEFRA/ivory-shared/badges/gpa.svg)](https://codeclimate.com/github/DEFRA/ivory-shared)
-[![Test Coverage](https://codeclimate.com/github/DEFRA/ivory-shared/badges/coverage.svg)](https://codeclimate.com/github/DEFRA/ivory-shared/coverage)
+[![Build Status](https://travis-ci.com/DEFRA/defra-hapi-utils.svg?branch=master)](https://travis-ci.com/DEFRA/defra-hapi-utils)
+[![Known Vulnerabilities](https://snyk.io/test/github/defra/defra-hapi-utils/badge.svg)](https://snyk.io/test/github/defra/defra-hapi-utils)
+[![Code Climate](https://codeclimate.com/github/DEFRA/defra-hapi-utils/badges/gpa.svg)](https://codeclimate.com/github/DEFRA/defra-hapi-utils)
+[![Test Coverage](https://codeclimate.com/github/DEFRA/defra-hapi-utils/badges/coverage.svg)](https://codeclimate.com/github/DEFRA/defra-hapi-utils/coverage)
 
 ## Development Team
 
@@ -32,7 +32,7 @@ Clone the repository and install its package
 dependencies:
 
 ```bash
-git clone https://github.com/DEFRA/ivory-shared.git && cd ivory-shared
+git clone https://github.com/DEFRA/defra-hapi-utils.git && cd defra-hapi-utils
 npm install
 ```
 
