@@ -1,16 +1,16 @@
 {
-  "name": "ivory-shared",
+  "name": "defra-hapi-utils",
   "version": "0.1.0",
   "description": "Digital service to support the Ivory Act",
   "author": "Department for Environment, Food & Rural Affairs",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/DEFRA/ivory-shared/issues"
+    "url": "https://github.com/DEFRA/defra-hapi-utils/issues"
   },
-  "homepage": "https://github.com/DEFRA/ivory-shared#readme",
+  "homepage": "https://github.com/DEFRA/defra-hapi-utils#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DEFRA/ivory-shared.git"
+    "url": "https://github.com/DEFRA/defra-hapi-utils.git"
   },
   "engines": {
     "node": "10.x"
