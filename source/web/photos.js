@@ -11,6 +11,7 @@ module.exports = class Photos {
       region: joi.string().default('REGION'),
       apiVersion: joi.string().default('API_VERSION'),
       bucket: joi.string().default('BUCKET'),
+      originalType: joi.string().default('original'),
       enabled: joi.bool().default(true),
 
       // Alongside the original, these are the other sizes we store
@@ -162,13 +163,13 @@ module.exports = class Photos {
       throw new Error('The filename passed to getStream is undefined.')
     }
     // Check the size is valid
-    if (size === undefined || (size !== 'original' && !this.alternativeSizes.find(({ type }) => type === size))) {
+    if (size === undefined || (size !== this.originalType && !this.alternativeSizes.find(({ type }) => type === size))) {
       throw new Error('An invalid photo size requested.')
     }
 
     // Set the key
     let key
-    if (size === 'original') {
+    if (size === this.originalType) {
       key = filename
     } else {
       key = `${size}.${filename}`
