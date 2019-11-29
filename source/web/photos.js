@@ -5,38 +5,20 @@ const stream = require('stream')
 const fs = require('fs')
 const sharp = require('sharp')
 
-const photoSmallMaxWidth = 200
-const photoSmallMaxHeight = 200
-const photoSmallPrefix = '200x200.'
-const photoMediumMaxWidth = 400
-const photoMediumMaxHeight = 400
-const photoMediumPrefix = '400x400.'
-
 module.exports = class Photos {
   constructor (config) {
     const schema = joi.object({
       region: joi.string().default('REGION'),
       apiVersion: joi.string().default('API_VERSION'),
       bucket: joi.string().default('BUCKET'),
-      small: joi.object({
-        width: joi.number().integer().default(photoSmallMaxWidth),
-        height: joi.number().integer().default(photoSmallMaxHeight),
-        filenamePrefix: joi.string().default(photoSmallPrefix)
-      }).default({
-        width: photoSmallMaxWidth,
-        height: photoSmallMaxHeight,
-        filenamePrefix: photoSmallPrefix
-      }),
-      medium: joi.object({
-        width: joi.number().integer().default(photoMediumMaxWidth),
-        height: joi.number().integer().default(photoMediumMaxHeight),
-        filenamePrefix: joi.string().default(photoMediumPrefix)
-      }).default({
-        width: photoMediumMaxWidth,
-        height: photoMediumMaxHeight,
-        filenamePrefix: photoMediumPrefix
-      }),
-      enabled: joi.bool().default(true)
+      enabled: joi.bool().default(true),
+
+      // Alongside the original, these are the other sizes we store
+      alternativeSizes: joi.array().items(joi.object({
+        width: joi.number().integer().required(),
+        height: joi.number().integer().required(),
+        type: joi.string().required()
+      })).default([])
     })
 
     // Validate the config
@@ -57,12 +39,6 @@ module.exports = class Photos {
     })
   }
 
-  // Alongside the original, these are the other sizes we store
-  get alternativeSizes () {
-    const { small, medium } = this
-    return { small, medium }
-  }
-
   async upload (filename, contentType, readStream) {
     if (!this.enabled) {
       logger.debug('AWS_S3_ENABLED is false, therefore pretending to store the photo and using a local test photo instead')
@@ -78,15 +54,13 @@ module.exports = class Photos {
     Using streams like this ensures the whole image isn't loaded into memory.  But be careful changing this logic.
     (That said the s3.upload appears to remove the memory efficiency of streams and load the image into memory, hmm!)
     */
-    const passThroughStreamOriginal = readStream.pipe(new stream.PassThrough())
-    const passThroughStreamSmall = readStream.pipe(new stream.PassThrough())
-    const passThroughStreamMedium = readStream.pipe(new stream.PassThrough())
 
     // Kick off all uploads and wait for them all to complete (this isn't in a .map because we need to explicitly pipe to a PassThrough first and the code was looking complex)
     await Promise.all([
-      this._uploadToS3(filename, contentType, passThroughStreamOriginal),
-      this._resizeAndUploadToS3(this.alternativeSizes.small, filename, contentType, passThroughStreamSmall),
-      this._resizeAndUploadToS3(this.alternativeSizes.medium, filename, contentType, passThroughStreamMedium)
+      this._uploadToS3(filename, contentType, readStream.pipe(new stream.PassThrough())),
+      Promise.all(this.alternativeSizes.map((size) => {
+        return this._resizeAndUploadToS3(size, filename, contentType, readStream.pipe(new stream.PassThrough()))
+      }))
     ])
       .then(values => {
         logger.debug(`resultArray: ${values}`)
@@ -120,21 +94,23 @@ module.exports = class Photos {
     return response.Key
   }
 
-  async _resizeAndUploadToS3 (sizeConfig, filename, contentType, readStream) {
+  async _resizeAndUploadToS3 ({ width, height, type }, filename, contentType, readStream) {
+    // Preserving aspect ratio, resize the image to be as large as possible while ensuring its dimensions are less than or equal to both those specified
+    const fit = sharp.fit.inside
+
+    // Do not enlarge if the width or height are already less than the specified dimensions
+    const withoutEnlargement = true
+
+    const alternativeSizeFilename = `${type}.${filename}`
+
     // Create the resizing transform stream
-    const resizeTransformStream = sharp()
-      .resize({
-        width: sizeConfig.width,
-        height: sizeConfig.height,
-        fit: sharp.fit.inside, // Preserving aspect ratio, resize the image to be as large as possible while ensuring its dimensions are less than or equal to both those specified
-        withoutEnlargement: true // Do not enlarge if the width or height are already less than the specified dimensions
-      })
+    const resizeTransformStream = sharp().resize({ width, height, fit, withoutEnlargement })
+
     // Pipe the read stream to the resizing transform stream
     readStream.pipe(resizeTransformStream)
+
     // Upload to S3
-    const alternativeSizeFilename = `${sizeConfig.filenamePrefix}${filename}`
-    return this._uploadToS3(alternativeSizeFilename, contentType,
-      resizeTransformStream)
+    return this._uploadToS3(alternativeSizeFilename, contentType, resizeTransformStream)
   }
 
   async delete (filename) {
@@ -186,9 +162,7 @@ module.exports = class Photos {
       throw new Error('The filename passed to getStream is undefined.')
     }
     // Check the size is valid
-    const alternativeSizesArray = Object.keys(this.alternativeSizes)
-    if (size === undefined || (size !== 'original' && !alternativeSizesArray.includes(size))) {
-      // if (size === undefined || (size !== 'original' && !Object.keys(this.alternativeSizes).includes(size))) {
+    if (size === undefined || (size !== 'original' && !this.alternativeSizes.find(({ type }) => type === size))) {
       throw new Error('An invalid photo size requested.')
     }
 
@@ -197,7 +171,7 @@ module.exports = class Photos {
     if (size === 'original') {
       key = filename
     } else {
-      key = `${this.alternativeSizes[size].filenamePrefix}${filename}`
+      key = `${size}.${filename}`
     }
 
     // Set the S3 parameters

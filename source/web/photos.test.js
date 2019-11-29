@@ -16,7 +16,13 @@ lab.experiment(TestHelper.getFile(__filename), () => {
     TestHelper.stubCommon(context.sandbox)
 
     photosConfig = {
-      region: 'REGION', apiVersion: 'APIVERSION', bucket: 'BUCKET'
+      region: 'REGION',
+      apiVersion: 'APIVERSION',
+      bucket: 'BUCKET',
+      alternativeSizes: [
+        { width: 200, height: 200, type: 'small' },
+        { width: 400, height: 400, type: 'medium' }
+      ]
     }
 
     // Stub and spy s3.upload
