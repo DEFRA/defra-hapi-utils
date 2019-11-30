@@ -122,7 +122,7 @@ module.exports = class Photos {
     // Delete all image sizes for that photo (the original and the alternative sizes)
     await Promise.all([
       this._deleteFromS3(filename),
-      ...Object.values(this.alternativeSizes).map((sizeConfig) => this._deleteFromS3(`${sizeConfig.filenamePrefix}${filename}`))
+      ...Object.values(this.alternativeSizes).map(({ type }) => this._deleteFromS3(`${type}.${filename}`))
     ])
       .then(() => {
         logger.info(`The photo (and it's alternative sizes) were deleted from S3: ${filename}`)
