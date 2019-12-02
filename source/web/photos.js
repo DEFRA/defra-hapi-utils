@@ -19,7 +19,12 @@ module.exports = class Photos {
         width: joi.number().integer().required(),
         height: joi.number().integer().required(),
         type: joi.string().required()
-      })).default([])
+      })).default([]),
+
+      // Upload config
+      maxMb: joi.number().min(1).max(20).default(10),
+      minKb: joi.number().min(1).max(50).default(1),
+      payloadMaxBytes: joi.number().min(50 * 1024).max(20 * 1024 * 1024).default(10 * 1024 * 1024)
     })
 
     // Validate the config
