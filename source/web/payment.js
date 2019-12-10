@@ -52,7 +52,7 @@ module.exports = class Payment {
   async requestPayment () {
     const { payload, headers, paymentsUrl } = this
     const { amount, reference } = payload
-    logger.info(`Requesting payment of £${amount} for reference ${reference}`)
+    logger.info(`Requesting payment of £${amount / 100} for reference ${reference}`)
 
     // Call the payment service
     const res = await wreck.request('POST', paymentsUrl, { payload, headers })
