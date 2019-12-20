@@ -23,6 +23,11 @@ module.exports = class Persistence {
     Object.assign(this, value)
   }
 
+  // This makes it easier to test instantiating Persistence
+  static createDAO (...args) {
+    return new Persistence(...args)
+  }
+
   async save (data) {
     const { path, serviceApiEnabled = true } = this
 

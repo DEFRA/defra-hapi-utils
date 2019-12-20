@@ -36,7 +36,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
     lab.test('when api is enabled', async () => {
       const data = { hasData: true }
-      const persistence = new Persistence({ path })
+      const persistence = Persistence.createDAO({ path })
       const result = await persistence.save(data)
       Code.expect(result).to.equal(saveResponse)
 
@@ -49,7 +49,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
     lab.test('when api is enabled and data contains an id', async () => {
       const data = { id: '59e06f54-e1ea-4cc3-a373-69db89174dfc', hasData: true }
-      const persistence = new Persistence({ path })
+      const persistence = Persistence.createDAO({ path })
       const result = await persistence.save(data)
       Code.expect(result).to.equal(saveResponse)
 
@@ -62,7 +62,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
     lab.test('when api is disabled', async () => {
       const data = { hasData: true }
-      const persistence = new Persistence({ path, serviceApiEnabled: false })
+      const persistence = Persistence.createDAO({ path, serviceApiEnabled: false })
       const result = await persistence.save(data)
       Code.expect(result.hasData).to.equal(true)
     })
@@ -76,7 +76,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         throw testError
       }
 
-      const persistence = new Persistence({ path })
+      const persistence = Persistence.createDAO({ path })
       let error
       try {
         await persistence.save(data)
@@ -96,7 +96,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
     lab.test('when api is enabled', async () => {
       const id = 'ID'
-      const persistence = new Persistence({ path })
+      const persistence = Persistence.createDAO({ path })
       const result = await persistence.restore(id)
       Code.expect(result).to.equal(restoreResponse)
 
@@ -108,7 +108,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
 
     lab.test('when api is disabled', async () => {
       const id = 'ID'
-      const persistence = new Persistence({ path, serviceApiEnabled: false })
+      const persistence = Persistence.createDAO({ path, serviceApiEnabled: false })
       const result = await persistence.restore(id)
       Code.expect(result).to.equal({ id })
     })
@@ -117,7 +117,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
       let error
       let persistence
       try {
-        persistence = new Persistence({})
+        persistence = Persistence.createDAO({})
       } catch (err) {
         error = err
       }
@@ -134,7 +134,7 @@ lab.experiment(TestHelper.getFile(__filename), () => {
         throw testError
       }
 
-      const persistence = new Persistence({ path })
+      const persistence = Persistence.createDAO({ path })
       let error
       try {
         await persistence.restore(id)
