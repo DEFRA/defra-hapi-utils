@@ -25,7 +25,7 @@
     "@hapi/code": "^7.0.0",
     "@hapi/lab": "^21.0.0",
     "codeclimate-test-reporter": "0.5.1",
-    "sinon": "^8.0.2",
+    "sinon": "^8.0.3",
     "standard": "14.3.1"
   },
   "dependencies": {
