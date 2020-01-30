@@ -1,6 +1,6 @@
 {
   "name": "defra-hapi-utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -913,9 +913,9 @@
       }
     },
     "env-variable": {
-      "version": "0.0.5",
-      "resolved": "https://registry.npmjs.org/env-variable/-/env-variable-0.0.5.tgz",
-      "integrity": "sha512-zoB603vQReOFvTg5xMl9I1P2PnHsHQQKTEowsKKD7nseUfJq6UWzK+4YtlWUO1nhiQUxe6XMkk+JleSZD1NZFA=="
+      "version": "0.0.6",
+      "resolved": "https://registry.npmjs.org/env-variable/-/env-variable-0.0.6.tgz",
+      "integrity": "sha512-bHz59NlBbtS0NhftmR8+ExBEekE7br0e01jw+kk0NDro7TtZzBYZ5ScGPs3OmwnpyfHTHOtr1Y6uedCdrIldtg=="
     },
     "error-ex": {
       "version": "1.3.2",
